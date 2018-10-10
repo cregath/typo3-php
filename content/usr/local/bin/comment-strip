@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# Filtert alle Zeilen aus, die mit "#" beginnen.
+awk -F: '/^[^#]/ { print $1 }'

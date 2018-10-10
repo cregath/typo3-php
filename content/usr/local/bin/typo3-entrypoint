@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+set -e
+
+# Enable Installtool after Update
+touch /var/www/html/htdocs/typo3conf/ENABLE_INSTALL_TOOL
+
+PATH_TO_BINARY="/var/www/html/vendor/bin/typo3cms"
+
+if [[ ! -e "${PATH_TO_BINARY}" ]]; then
+    PATH_TO_BINARY="/var/www/html/bin/typo3cms"
+fi
+
+if [[ -e "${PATH_TO_BINARY}" ]] && [[ "${CRON_IMAGE}" != 'true' ]]; then
+    # Update Database Schema --safe
+    su -s /bin/sh apache -c "${PATH_TO_BINARY} database:updateschema --safe"
+    
+    # Clear Cache
+    su -s /bin/sh apache -c  "${PATH_TO_BINARY} cache:flush"
+    
+    # Default InstallTool actions
+    su -s /bin/sh apache -c  "${PATH_TO_BINARY} install:fixfolderstructure"
+fi
+
+# call parent entrypoint, forward parameters
+exec php-apache-entrypoint "$@"
+
+

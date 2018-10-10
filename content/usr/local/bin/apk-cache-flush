@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+rm -rvf /var/cache/apk/*

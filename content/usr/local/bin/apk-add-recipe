@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+filename=$1
+if [ -z "$filename" ]; then
+    echo File $filename not found
+    exit 1
+fi
+
+cat $filename | comment-strip | xargs apk add
+
+# checksum_filename=$filename.checksum
+# if [ -f "$checksum_filename" ]; then
+#    sha256sum -c $checksum_filename
+# fi;
